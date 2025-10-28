@@ -58,7 +58,7 @@ async function startSock() {
 
     try {
       // Call unified chat API
-      const response = await fetch('http://localhost:3000/api/chat', {
+      const response = await fetch('https://emirates-glow-connect-73es.vercel.app/api/chat/', {
         method: 'POST',
         headers: {
           'Authorization': 'Basic ZW1pcmF0ZXM6c2VjdXJlMTIzIUVtaXJhdGVzQ29ubmVjdA==',
@@ -117,5 +117,5 @@ app.post("/send", async (req, res) => {
 // ==========================
 // 4️⃣  Start Server
 // ==========================
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
