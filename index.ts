@@ -57,25 +57,28 @@ async function startSock() {
     console.log("📩 Received:", { sender, text });
 
     try {
+      // Extract phone number from JID (remove @s.whatsapp.net)
+      const phoneNumber = sender.replace('@s.whatsapp.net', '');
+      
       // Call unified chat API
-      const response = await fetch('https://emirates-glow-connect-73es.vercel.app/api/chat/', {
+      const response = await fetch('https://emirates-glow-connect-73es.vercel.app/api/chat', {
         method: 'POST',
         headers: {
-          'Authorization': 'Basic ZW1pcmF0ZXM6c2VjdXJlMTIzIUVtaXJhdGVzQ29ubmVjdA==',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: sender,
-          text: text,
-          timestamp: new Date().toISOString()
+          message: text,
+          from: phoneNumber,
+          platform: "whatsapp"
         })
       });
-
+      console.log("📤 Forwarding to API:", response);
+      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
-      console.log("✅ Message forwarded successfully");
+      const data = await response.json() as { response: string };
+      await sock.sendMessage(sender, { text: data.response });
     } catch (err) {
       console.error("❌ Failed to forward message:", err instanceof Error ? err.message : String(err));
     }
